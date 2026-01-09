@@ -31,23 +31,47 @@ export default function QuizScreen() {
   const [quizEnded, setQuizEnded] = useState(false);
   const [userName, setUserName] = useState("");
   const [quizStarted, setQuizStarted] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [showAnswer, setShowAnswer] = useState(false);
+
 
   if (loading) return <ActivityIndicator size="large" style={styles.center} />;
   if (error) return <Text style={styles.center}>Error: {error.message}</Text>;
 
   const questions = data?.questions || [];
 
+  // const handleAnswer = (selected: string) => {
+  //   if (selected === questions[currentIdx].correctAnswer) {
+  //     setScore(score + 1);
+  //   }
+
+  //   if (currentIdx + 1 < questions.length) {
+  //     setCurrentIdx(currentIdx + 1);
+  //   } else {
+  //     setQuizEnded(true);
+  //   }
+  // };
   const handleAnswer = (selected: string) => {
+    if (showAnswer) return;   // prevent multiple clicks
+
+    setSelectedOption(selected);
+    setShowAnswer(true);
+
     if (selected === questions[currentIdx].correctAnswer) {
-      setScore(score + 1);
+      setScore(prev => prev + 1);
     }
 
-    if (currentIdx + 1 < questions.length) {
-      setCurrentIdx(currentIdx + 1);
-    } else {
-      setQuizEnded(true);
-    }
+    setTimeout(() => {
+      if (currentIdx + 1 < questions.length) {
+        setCurrentIdx(prev => prev + 1);
+        setSelectedOption(null);
+        setShowAnswer(false);
+      } else {
+        setQuizEnded(true);
+      }
+    }, 1000); // 1 second delay
   };
+
 
   /* ----------- START SCREEN ----------- */
   if (!quizStarted) {
@@ -107,7 +131,7 @@ export default function QuizScreen() {
     <View style={styles.page}>
       <View style={styles.container}>
         <Text style={styles.progress}>
-          {userName} — Question {currentIdx + 1} of {questions.length}
+          Question {currentIdx + 1} of {questions.length}
         </Text>
 
         <View style={styles.card}>
@@ -115,11 +139,28 @@ export default function QuizScreen() {
             {questions[currentIdx].question}
           </Text>
 
-          {questions[currentIdx].options.map((opt, i) => (
-            <TouchableOpacity key={i} style={styles.option} onPress={() => handleAnswer(opt)}>
-              <Text style={styles.optionText}>{opt}</Text>
-            </TouchableOpacity>
-          ))}
+          {questions[currentIdx].options.map((opt, i) => {
+            const correct = questions[currentIdx].correctAnswer;
+
+            let backgroundColor = '#007AFF';
+
+            if (showAnswer) {
+              if (opt === correct) backgroundColor = '#28a745';      // green
+              else if (opt === selectedOption) backgroundColor = '#dc3545'; // red
+            }
+
+            return (
+              <TouchableOpacity
+                key={i}
+                style={[styles.option, { backgroundColor }]}
+                onPress={() => handleAnswer(opt)}
+                disabled={showAnswer}
+              >
+                <Text style={styles.optionText}>{opt}</Text>
+              </TouchableOpacity>
+            );
+          })}
+
         </View>
       </View>
     </View>
