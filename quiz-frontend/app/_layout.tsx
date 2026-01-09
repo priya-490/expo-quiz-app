@@ -1,9 +1,3 @@
-// import { Stack } from "expo-router";
-
-// export default function RootLayout() {
-//   return <Stack />;
-// }
-
 // creates graphql client
 // wraps the whole app so every screen can use it 
 
@@ -13,7 +7,6 @@ import { ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { ApolloProvider } from '@apollo/client/react'; 
 // makes client available everywhere
 
-// Replace '192.168.x.x' with your computer's actual IP address
 const client = new ApolloClient({
   //  connects our app to backend graphql server
     link: new HttpLink({ uri: 'http://192.168.1.2:4000/graphql' }),
