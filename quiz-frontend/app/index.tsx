@@ -40,17 +40,6 @@ export default function QuizScreen() {
 
   const questions = data?.questions || [];
 
-  // const handleAnswer = (selected: string) => {
-  //   if (selected === questions[currentIdx].correctAnswer) {
-  //     setScore(score + 1);
-  //   }
-
-  //   if (currentIdx + 1 < questions.length) {
-  //     setCurrentIdx(currentIdx + 1);
-  //   } else {
-  //     setQuizEnded(true);
-  //   }
-  // };
   const handleAnswer = (selected: string) => {
     if (showAnswer) return;   // prevent multiple clicks
 
@@ -69,11 +58,11 @@ export default function QuizScreen() {
       } else {
         setQuizEnded(true);
       }
-    }, 1000); // 1 second delay
+    }, 1000);
   };
 
 
-  /* ----------- START SCREEN ----------- */
+  //  start screen
   if (!quizStarted) {
     return (
       <View style={styles.page}>
@@ -99,7 +88,7 @@ export default function QuizScreen() {
     );
   }
 
-  /* ----------- RESULT SCREEN ----------- */
+  //  result screen
   if (quizEnded) {
     return (
       <View style={styles.page}>
@@ -126,7 +115,7 @@ export default function QuizScreen() {
     );
   }
 
-  /* ----------- QUIZ SCREEN ----------- */
+  //  quiz screen
   return (
     <View style={styles.page}>
       <View style={styles.container}>
@@ -145,8 +134,8 @@ export default function QuizScreen() {
             let backgroundColor = '#007AFF';
 
             if (showAnswer) {
-              if (opt === correct) backgroundColor = '#28a745';      // green
-              else if (opt === selectedOption) backgroundColor = '#dc3545'; // red
+              if (opt === correct) backgroundColor = '#28a745';
+              else if (opt === selectedOption) backgroundColor = '#dc3545';
             }
 
             return (
